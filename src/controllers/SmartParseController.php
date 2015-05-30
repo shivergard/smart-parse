@@ -4,6 +4,11 @@ use App\Requests;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+use \Schema;
+
 
 use \Carbon;
 
@@ -111,7 +116,7 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 
 	public function singleTable($name){
 
-		$this->getRandomData($name)->paginate(3);
+		$sampleFields = $this->getRandomData($name)->paginate(3);
 
 		$tables = $this->getTables();
 		$finalTables = array();
@@ -142,7 +147,7 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 
         $rndItem = $this->getRandomData($request->input('from'))->first();
 
-        $selectArray = array();
+        $selectArray = array('' => '---');
 
         foreach ($this->getAllColumnsNames($request->input('from')) as $field) {
         	$selectArray[$field] =  $rndItem->$field;
@@ -151,8 +156,48 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 
 		return view('smart-parse::prepare' , array(
 			'target_fields' => $this->getAllColumnsNames($request->input('target_tables')),
-			'select' => $selectArray
+			'select' => $selectArray,
+			'from' => $request->input('from'),
+			'target_tables' => $request->input('target_tables')
 		));
+	}
+
+	public function publishJob(Request $request){
+		$validator = $this->validate($request, [
+            'from' => 'required|max:255',
+            'target_tables' => 'required',
+        ]);
+
+        if (is_object($validator) && $validator->fails()){
+            return redirect()->to(action('\Shivergard\SmartParse\SmartParseController@singleTable'))->withErrors($validator->errors());
+        }
+
+        if (!Schema::hasTable('spt_jobs')){
+        	Schema::create('spt_jobs', function(Blueprint $table){
+				$table->increments('id');
+				$table->longText('details');
+				$table->string('table')->unique();
+			});
+        }
+
+        DB::table('spt_jobs')->insert(
+		    array('table' => $request->input('from') , 'details' => json_encode($request->all()))
+		);
+
+        return redirect()->to(action('\Shivergard\SmartParse\SmartParseController@jobList'));
+	}
+
+	public function jobList(){
+		return view('smart-parse::joblist' , 
+			array(
+				'fields' => array('id', 'table'),
+				'list' => DB::table('spt_jobs')->select('id', 'table')->get(),
+			)		
+		);
+	}
+
+	public function upload(){
+
 	}
 
 }
