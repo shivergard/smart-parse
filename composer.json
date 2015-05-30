@@ -1,0 +1,25 @@
+{
+    "name": "shivergard/smart-parse",
+    "description": "",
+    "authors": [
+        {
+            "name": "Ronalds Sovas",
+            "email": "shivergard@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "5.0.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations",
+            "src/controllers",
+            "src/views"
+        ],
+        "psr-0": {
+            "Shivergard\\SmartParse\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
