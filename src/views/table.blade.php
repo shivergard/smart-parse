@@ -4,6 +4,19 @@
 <div class="container-fluid">
 	<div>
 			<h3>Select Import Table</h3>
+
+			 @if (count($errors) > 0)
+			    <div class="alert alert-danger">
+			        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+			        <ul>
+			            @foreach ($errors->all() as $error)
+			                <li>{{ $error }}</li>
+			            @endforeach
+			        </ul>
+			    </div>
+			@endif
+
+			
 			{!! Form::open(array('id' => "contactForm" , 'url' => action('\Shivergard\SmartParse\SmartParseController@prepareJob'))) !!}
 			{!! Form::hidden('from', $name ) !!}
 			{!! Form::select('target_tables', $target_tables); !!}

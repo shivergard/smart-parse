@@ -4,6 +4,7 @@ use App\Requests;
 
 use Illuminate\Http\Request;
 
+
 use \Carbon;
 
 use \Config;
@@ -78,6 +79,20 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 		return DB::select($tableListQuery);
     }
 
+    private function getRandomData($name){
+    	switch (Config::get('database.default')) {
+			case 'sqlite':
+				$orderBy = 'Random()';
+				break;
+			
+			default:
+				$orderBy = 'RAND()';
+				break;
+		}
+
+		return DB::table($name)->orderByRaw($orderBy);
+    }
+
 	public function test(){
 		return false;
 	}
@@ -96,17 +111,7 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 
 	public function singleTable($name){
 
-		switch (Config::get('database.default')) {
-			case 'sqlite':
-				$orderBy = 'Random()';
-				break;
-			
-			default:
-				$orderBy = 'RAND()';
-				break;
-		}
-
-		$sampleFields = DB::table($name)->orderByRaw($orderBy)->paginate(3);
+		$this->getRandomData($name)->paginate(3);
 
 		$tables = $this->getTables();
 		$finalTables = array();
@@ -125,8 +130,29 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 		);
 	}
 
-	public function prepareJob(){
-		return view('smart-parse::prepare');
+	public function prepareJob(Request $request){
+		$validator = $this->validate($request, [
+            'from' => 'required|max:255',
+            'target_tables' => 'required',
+        ]);
+
+        if (is_object($validator) && $validator->fails()){
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
+        $rndItem = $this->getRandomData($request->input('from'))->first();
+
+        $selectArray = array();
+
+        foreach ($this->getAllColumnsNames($request->input('from')) as $field) {
+        	$selectArray[$field] =  $rndItem->$field;
+        }
+
+
+		return view('smart-parse::prepare' , array(
+			'target_fields' => $this->getAllColumnsNames($request->input('target_tables')),
+			'select' => $selectArray
+		));
 	}
 
 }
