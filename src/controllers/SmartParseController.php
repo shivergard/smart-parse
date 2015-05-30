@@ -16,6 +16,11 @@ use \Config;
 use \DB;
 use \Form;
 
+use \Input;
+use \Validator;
+use \Session;
+use \File;
+use \Redirect;
 
 class SmartParseController extends \App\Http\Controllers\Controller {
 
@@ -197,7 +202,26 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 	}
 
 	public function upload(){
+		// getting all of the post data
+		  $file = array('csv' => Input::file('csv'));
 
+		    // checking file is valid.
+		    if (Input::file('csv')->isValid()) {
+		      $destinationPath = storage_path().'/csv'; // upload path
+		      if(!File::exists($destinationPath)) 
+		      	File::makeDirectory($destinationPath);
+		      $extension = Input::file('csv')->getClientOriginalExtension(); // getting image extension
+		      $fileName = rand(11111,99999).'.'.$extension; // renameing image
+		      Input::file('csv')->move($destinationPath, $fileName); // uploading file to given path
+		      // sending back with message
+		      Session::flash('success', 'Upload successfully'); 
+		      return Redirect::to(action('\Shivergard\SmartParse\SmartParseController@jobList'));
+		    }
+		    else {
+		      // sending back with error message.
+		      Session::flash('error', 'uploaded file is not valid');
+		      return Redirect::to(action('\Shivergard\SmartParse\SmartParseController@jobList'));
+		    }
 	}
 
 }

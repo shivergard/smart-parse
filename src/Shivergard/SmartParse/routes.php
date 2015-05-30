@@ -18,7 +18,12 @@ Route::get('/smart-parse/table/{name}' , 'Shivergard\SmartParse\SmartParseContro
 Route::post('/smart-parse/prepare' , 'Shivergard\SmartParse\SmartParseController@prepareJob');
 Route::post('/smart-parse/publish' , 'Shivergard\SmartParse\SmartParseController@publishJob');
 Route::get('/smart-parse/job-list' , 'Shivergard\SmartParse\SmartParseController@jobList');
-Route::get('/smart-parse/upload' , 'Shivergard\SmartParse\SmartParseController@upload');
+
+Route::get('/smart-parse/upload', function() {
+  return View::make('smart-parse::upload');
+});
+
+Route::post('/smart-parse/upload' , 'Shivergard\SmartParse\SmartParseController@upload');
 
 
 Route::get('/smart-parse/{method}', function($method)
