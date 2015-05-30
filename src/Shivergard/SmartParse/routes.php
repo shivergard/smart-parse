@@ -15,6 +15,7 @@ use \Redirect;
 
 Route::get('/smart-parse/table/{name}' , 'Shivergard\SmartParse\SmartParseController@singleTable');
 
+Route::post('/smart-parse/prepare' , 'Shivergard\SmartParse\SmartParseController@prepareJob');
 Route::get('/smart-parse/{method}', function($method)
 {
     $controller = new Shivergard\SmartParse\SmartParseController;

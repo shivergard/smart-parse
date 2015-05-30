@@ -8,6 +8,7 @@ use \Carbon;
 
 use \Config;
 use \DB;
+use \Form;
 
 
 class SmartParseController extends \App\Http\Controllers\Controller {
@@ -63,14 +64,9 @@ class SmartParseController extends \App\Http\Controllers\Controller {
         return $columns;
     }
 
-	public function test(){
-		return false;
-	}
 
-
-	public function init(){
-		
-		switch (Config::get('database.default')) {
+    private function getTables(){
+    	switch (Config::get('database.default')) {
 			case 'sqlite':
 				$tableListQuery = 'SELECT * FROM sqlite_master WHERE type="table"';
 				break;
@@ -79,8 +75,16 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 				$tableListQuery = 'SHOW TABLES';
 				break;
 		}
-		$tables = DB::select($tableListQuery);
+		return DB::select($tableListQuery);
+    }
 
+	public function test(){
+		return false;
+	}
+
+
+	public function init(){
+		$tables = $this->getTables();
 		$finalTables = array();
 		foreach ($tables as $item) {
 			if (strpos( $item->name , 'tmp_' ) > -1)
@@ -104,13 +108,25 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 
 		$sampleFields = DB::table($name)->orderByRaw($orderBy)->paginate(3);
 
+		$tables = $this->getTables();
+		$finalTables = array();
+		foreach ($tables as $item) {
+			if (!(strpos( $item->name , 'tmp_' ) > -1))
+				$finalTables[$item->name] = $item->name;
+		}
+
 		return view('smart-parse::table' , 
 			array(
 				'fields' => $this->getAllColumnsNames($name),
 				'name' => $name ,
 				'list' => $sampleFields,
+				'target_tables' => $finalTables
 			)		
 		);
+	}
+
+	public function prepareJob(){
+		return view('smart-parse::prepare');
 	}
 
 }
