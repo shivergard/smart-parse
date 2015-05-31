@@ -20,7 +20,7 @@ class SmartParseServiceProvider extends ServiceProvider {
 	{
 
 		require __DIR__ .'/routes.php';
-		$this->loadViewsFrom(__DIR__.'/../../views', 'smart-parse');
+		View::addNamespace('smart-parse', __DIR__.'/../../views')
 		$this->commands('Shivergard\SmartParse\Console\SmartParseConsole');
 		$this->commands('Shivergard\SmartParse\Console\InitConsole');
 	}
