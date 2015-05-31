@@ -33,12 +33,16 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 	}
 
 
-	public function init(){
+	public function init($full = false){
 		$tables = $this->getTables();
 		$finalTables = array();
-		foreach ($tables as $item) {
-			if (strpos( $item->name , 'tmp_' ) > -1)
-				$finalTables[] = $item;
+		if (!$full){
+			foreach ($tables as $item) {
+				if (strpos( $item->name , 'tmp_' ) > -1)
+					$finalTables[] = $item;
+			}
+		}else{
+			$finalTables = $tables;
 		}
 
 		return view('smart-parse::smart-parse' , array('tables' => $finalTables , 'fields' => array('name' , 'table_url')));

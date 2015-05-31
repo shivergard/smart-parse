@@ -1,4 +1,4 @@
-@extends('app')
+@extends('smart-parse::app')
 
 @section('content')
 
