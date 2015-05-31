@@ -6,7 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>SmartParse</title>
 
-	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+	<style type="text/css">
+		@include('smart-parse::css')
+	</style>
 
 	<!-- Fonts -->
 	<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
