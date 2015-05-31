@@ -18,7 +18,7 @@ class SmartParseServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-
+		$this->package('shivergard/smart_parse');
 		require __DIR__ .'/routes.php';
 		View::addNamespace('smart-parse', __DIR__.'/../../views')
 		$this->commands('Shivergard\SmartParse\Console\SmartParseConsole');
