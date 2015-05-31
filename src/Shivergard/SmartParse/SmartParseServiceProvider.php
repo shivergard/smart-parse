@@ -19,11 +19,6 @@ class SmartParseServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 
-		//config publish
-		$this->publishes([
-		    __DIR__.'/smart-parse.php' => config_path('smart-parse.php'),
-		]);
-
 		require __DIR__ .'/routes.php';
 		$this->loadViewsFrom(__DIR__.'/../../views', 'smart-parse');
 		$this->commands('Shivergard\SmartParse\Console\SmartParseConsole');
