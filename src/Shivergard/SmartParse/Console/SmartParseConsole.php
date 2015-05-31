@@ -118,8 +118,12 @@ class SmartParseConsole extends Command {
 					$orderBy = 'RAND()';
 					break;
 			}
+
+			$this->info('batch processed');
+			
+
 			foreach (
-				DB::table($jobDescription['from'])->where('spt_jobs' , 'NOT LIKE' , $job->table)->orderByRaw($orderBy)->paginate(20) 
+				DB::table($jobDescription['from'])->where('spt_jobs' , 'NOT LIKE' , $job->table)->orderByRaw($orderBy)->get()//->paginate(20) 
 				as $row
 			) {
 				$fillData = array();
@@ -127,13 +131,19 @@ class SmartParseConsole extends Command {
 					if (isset($jobDescription[$field]) && isset($row->$jobDescription[$field]))
 					$fillData[$field] = $row->$jobDescription[$field];
 				}
+
+				$fillData['created_at'] = date('d-m-Y H:i:s');
+				$fillData['updated_at'] = date('d-m-Y H:i:s');
 				DB::table($jobDescription['target_tables'])->insert($fillData);
 				DB::table($jobDescription['from'])
 			            ->where('id', $row->id)
 			            ->update(array('spt_jobs' => $job->table));
 			}
 
-			$this->info('batch processed');
+			if (DB::table($jobDescription['from'])->where('spt_jobs' , 'NOT LIKE' , $job->table)->orderByRaw($orderBy)->count() == 0){
+				DB::table('spt_jobs')->where('id', $job->id)->delete();	
+				$this->info('Job empty - deleted');
+			}
 
 		}else{
 			$this->info('¯\(°_o)/¯ No Jobs');

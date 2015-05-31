@@ -110,6 +110,7 @@ class SmartParseController extends \App\Http\Controllers\Controller {
 			});
         }
 
+
         DB::table('spt_jobs')->insert(
 		    array('table' => $request->input('from') , 'details' => json_encode($request->all()))
 		);
