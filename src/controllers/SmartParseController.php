@@ -24,7 +24,7 @@ use \Redirect;
 
 use Shivergard\SmartParse\CommonMeth;
 
-class SmartParseController extends \App\Http\Controllers\Controller {
+class SmartParseController extends \Shivergard\SmartParse\PackageController {
 
 	use CommonMeth;
 
