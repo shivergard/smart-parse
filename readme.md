@@ -11,7 +11,7 @@ and add requirements
 
 	"require": {
 		...
-        "shivergard/smart-parse" : "dev-master" ,
+        "shivergard/smart-parse" : "dev-l4" ,
     },
 
 and add service provider
