@@ -28,6 +28,7 @@ class SmartParseServiceProvider extends ServiceProvider {
 		$this->loadViewsFrom(__DIR__.'/../../views', 'smart-parse');
 		$this->commands('Shivergard\SmartParse\Console\SmartParseConsole');
 		$this->commands('Shivergard\SmartParse\Console\InitConsole');
+		$this->commands('Shivergard\SmartParse\Console\CsvImportConsole');
 	}
 
 	/**
