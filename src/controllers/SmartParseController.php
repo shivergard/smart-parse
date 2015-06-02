@@ -35,7 +35,6 @@ class SmartParseController extends \Shivergard\SmartParse\PackageController {
 
 	public function init($full = false){
 		$tables = $this->getTables();
-		dd($tables);
 		$finalTables = array();
 		if (!$full){
 			foreach ($tables as $item) {
