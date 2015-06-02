@@ -38,8 +38,10 @@ class SmartParseController extends \Shivergard\SmartParse\PackageController {
 		$finalTables = array();
 		if (!$full){
 			foreach ($tables as $item) {
-				if (strpos( $item->name , 'tmp_' ) > -1)
+				if (is_object($item) && strpos( $item->name , 'tmp_' ) > -1)
 					$finalTables[] = $item;
+				else if (!is_object($item))
+					dd($item);
 			}
 		}else{
 			$finalTables = $tables;
