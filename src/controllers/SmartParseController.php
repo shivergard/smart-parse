@@ -123,6 +123,16 @@ class SmartParseController extends \Shivergard\SmartParse\PackageController {
 	}
 
 	public function jobList(){
+
+		if (!Schema::hasTable('spt_jobs')){
+        	Schema::create('spt_jobs', function(Blueprint $table){
+				$table->increments('id');
+				$table->longText('details');
+				$table->string('table')->unique();
+			});
+        }
+
+
 		return view('smart-parse::joblist' , 
 			array(
 				'fields' => array('id', 'table'),
