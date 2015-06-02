@@ -83,7 +83,7 @@ trait CommonMeth{
 				break;
 			
 			default:
-				$tableListQuery = 'SHOW TABLES';
+				$tableListQuery = 'SHOW TABLES as name';
 				break;
 		}
 		return DB::select($tableListQuery);
