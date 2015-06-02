@@ -83,7 +83,7 @@ trait CommonMeth{
 				break;
 			
 			default:
-				$tableListQuery = 'SHOW TABLES as name';
+				$tableListQuery = 'SELECT TABLE_NAME as name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA !=  "information_schema"';
 				break;
 		}
 		return DB::select($tableListQuery);
